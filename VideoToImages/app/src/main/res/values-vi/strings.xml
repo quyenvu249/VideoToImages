@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VideoToImages</string>
+    <string name="action1">Chọn Video</string>
+    <string name="action2">Thư viện</string>
+    <string name="action3">Tạo Slideshow</string>
+    <string name="action4">Cài đặt</string>
+</resources>
