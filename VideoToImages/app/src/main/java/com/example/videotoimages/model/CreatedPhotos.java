@@ -7,15 +7,17 @@ public class CreatedPhotos {
     String photoName;
     String photoPath;
     int photoSize;
+    boolean isChecked;
 
     public CreatedPhotos() {
     }
 
-    public CreatedPhotos(Bitmap bitmap, String photoName, String photoPath, int photoSize) {
+    public CreatedPhotos(Bitmap bitmap, String photoName, String photoPath, int photoSize, boolean isChecked) {
         this.bitmap = bitmap;
         this.photoName = photoName;
         this.photoPath = photoPath;
         this.photoSize = photoSize;
+        this.isChecked = isChecked;
     }
 
     public String getPhotoName() {
@@ -48,6 +50,14 @@ public class CreatedPhotos {
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 }
 

@@ -28,6 +28,7 @@
         android:columnOrderPreserved="false"
         android:padding="16dp"
         android:rowCount="2"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
@@ -169,6 +170,7 @@
     </GridLayout>
 
     <LinearLayout
+        android:padding="@dimen/margin_20dp"
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -2,10 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".PhotoDetailActivity">
+    tools:context="com.example.videotoimages.activity.PhotoDetailActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -23,43 +24,41 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_baseline_info_24" />
 
-        <Button
-            android:id="@+id/btnDone"
+        <ImageView
+            android:id="@+id/icSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DONE"
+            android:src="@drawable/ic_baseline_save_24"
             android:visibility="invisible" />
     </androidx.appcompat.widget.Toolbar>
 
-    <!--    <SurfaceView-->
-    <!--        android:id="@+id/surfaceView"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        app:layout_constraintBottom_toBottomOf="@+id/toolbar"-->
-    <!--        app:layout_constraintStart_toStartOf="parent" />-->
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/quick_start_cropped_image"-->
-<!--        android:layout_width="200dp"-->
-<!--        android:layout_height="200dp"-->
-<!--        android:src="@drawable/image"-->
-<!--        android:layout_marginTop="39dp"-->
-<!--        android:layout_below="@+id/textView"-->
-<!--        android:layout_centerHorizontal="true" />-->
-
-    <ImageView
-        android:id="@+id/imgPhoto"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/rlImage"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <ja.burhanrashid52.photoeditor.PhotoEditorView
+            android:id="@+id/imgPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_20dp" />
+
+
+        <TextView
+            android:id="@+id/tvText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/layoutFunction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="16dp"
+        android:padding="@dimen/margin_20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -89,8 +88,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="16dp"
+        android:padding="@dimen/margin_20dp"
         android:visibility="invisible"
+        android:weightSum="4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -98,79 +98,114 @@
             android:id="@+id/icCrop"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:src="@drawable/ic_baseline_crop_24" />
 
         <ImageView
             android:id="@+id/icText"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:src="@drawable/ic_baseline_text_fields_24" />
 
         <ImageView
             android:id="@+id/icSticker"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:src="@drawable/ic_baseline_insert_emoticon_24" />
 
         <ImageView
             android:id="@+id/icPaint"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_weight="1"
             android:src="@drawable/ic_baseline_brush_24" />
     </LinearLayout>
 
-<!--    <LinearLayout-->
-<!--        android:id="@+id/layoutCrop"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:padding="16dp"-->
-<!--        android:visibility="invisible"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent">-->
+    <LinearLayout
+        android:id="@+id/layoutToPaint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_20dp"
+        android:visibility="invisible"
+        android:weightSum="10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-<!--        <RadioGroup-->
-<!--            android:id="@+id/rgRatioCrop"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:orientation="horizontal"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/textView3">-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:orientation="vertical">
 
-<!--            <RadioButton-->
-<!--                android:id="@+id/rd11"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="0"-->
-<!--                android:text="1:1" />-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Size" />
 
-<!--            <RadioButton-->
-<!--                android:id="@+id/rd23"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="0"-->
-<!--                android:text="2:3" />-->
+            <SeekBar
+                android:id="@+id/sbBrushSize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-<!--            <RadioButton-->
-<!--                android:id="@+id/rd34"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="0"-->
-<!--                android:text="3:4" />-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Opacity" />
 
-<!--            <RadioButton-->
-<!--                android:id="@+id/rd43"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="0"-->
-<!--                android:text="4:3" />-->
+            <SeekBar
+                android:id="@+id/sbBrushOpacity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
-<!--            <RadioButton-->
-<!--                android:id="@+id/rd31"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_weight="0"-->
-<!--                android:text="3:1" />-->
-<!--        </RadioGroup>-->
-<!--    </LinearLayout>-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_20dp"
+            android:layout_marginTop="@dimen/margin_20dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/icColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_color_lens_24" />
+
+            <ImageView
+                android:id="@+id/icEraser"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/eraser" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/margin_20dp"
+        android:visibility="invisible"
+        android:weightSum="5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <EditText
+            android:id="@+id/edText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3" />
+
+        <ImageView
+            android:id="@+id/icPickColor"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_baseline_color_lens_24" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

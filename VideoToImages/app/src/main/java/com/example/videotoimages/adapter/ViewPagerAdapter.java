@@ -8,12 +8,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.videotoimages.PhotosGalleryFragment;
+import com.example.videotoimages.fragment.PhotosGalleryFragment;
 import com.example.videotoimages.R;
-import com.example.videotoimages.VideoGalleryFragment;
+import com.example.videotoimages.fragment.VideoGalleryFragment;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
-    public final int[] TAB_FILES = new int[]{R.string.videos, R.string.images};
+    public final int[] TAB_FILES = new int[]{R.string.images, R.string.videos};
     Context context;
 
     public ViewPagerAdapter(Context context, @NonNull FragmentManager fm) {
@@ -26,11 +26,12 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                VideoGalleryFragment fragment1 = VideoGalleryFragment.newInstance();
-                return fragment1;
-            case 1:
                 PhotosGalleryFragment playlistFragment = PhotosGalleryFragment.newInstance();
                 return playlistFragment;
+
+            case 1:
+                VideoGalleryFragment fragment1 = VideoGalleryFragment.newInstance();
+                return fragment1;
             default:
                 return null;
         }

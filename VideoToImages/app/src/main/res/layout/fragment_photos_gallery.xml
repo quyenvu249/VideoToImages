@@ -4,19 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PhotosGalleryFragment">
-
-    <!--    <androidx.recyclerview.widget.RecyclerView-->
-    <!--        android:id="@+id/rcPhotos"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:layout_marginTop="104dp" />-->
+    tools:context=".fragment.PhotosGalleryFragment">
 
     <GridView
-        android:numColumns="3"
-        android:stretchMode="columnWidth"
         android:id="@+id/grPhotos"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="104dp" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="104dp"
+        android:numColumns="3"
+        android:stretchMode="columnWidth" />
 </FrameLayout>

@@ -7,44 +7,50 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-feature
         android:name="android.hardware.camera2"
         android:required="true" />
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_baseline_video_library_24"
+        android:hardwareAccelerated="false"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" />
+        <!--        <activity-->
+        <!--            android:name="com.yalantis.ucrop.UCropActivity"-->
+        <!--            android:screenOrientation="portrait"-->
+        <!--            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />-->
         <activity
-            android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity
-            android:name=".PhotoDetailActivity"
+            android:name=".activity.PhotoDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activity.SettingsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SlideshowMakerActivity"
+            android:name=".activity.SlideshowMakerActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".GalleryActivity"
+            android:name=".activity.GalleryActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ChooseVideoFolderActivity"
+            android:name=".activity.ChooseVideoFolderActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".PlayVideoActivity"
+            android:name=".activity.PlayVideoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ListVideoActivity"
+            android:name=".activity.ListVideoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SplashScreenActivity"
+            android:name=".activity.SplashScreenActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,7 +59,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 

@@ -1,6 +1,7 @@
 package com.example.videotoimages.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.videotoimages.activity.GalleryActivity;
 import com.example.videotoimages.R;
 import com.example.videotoimages.model.CreatedPhotos;
 
@@ -34,6 +36,13 @@ public class PhotosPreviewAdapter extends RecyclerView.Adapter<PhotosPreviewAdap
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
         //Glide.with(context).load(arrayList.get(position).photoPath).into(holder.img);
         holder.img.setImageBitmap(arrayList.get(position).getBitmap());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context=v.getContext();
+                context.startActivity(new Intent(context, GalleryActivity.class));
+            }
+        });
     }
 
     @Override

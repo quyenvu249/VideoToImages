@@ -20,6 +20,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -42,6 +46,13 @@ dependencies {
 
     implementation 'com.github.yalantis:ucrop:2.2.6'
 
-    implementation 'com.theartofdev.edmodo:android-image-cropper:2.3.+'
+    //implementation 'com.theartofdev.edmodo:android-image-cropper:2.3.+'
 
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+
+    implementation 'com.github.duanhong169:colorpicker:1.1.6'
+
+    implementation 'com.github.iamutkarshtiwari:Ananas:1.2.4'
+    implementation 'ja.burhanrashid52:photoeditor:1.0.0'
+    implementation 'com.github.yukuku:ambilwarna:2.0.1'
 }

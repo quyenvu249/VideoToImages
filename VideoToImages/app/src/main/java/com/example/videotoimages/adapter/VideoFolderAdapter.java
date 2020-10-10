@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.videotoimages.ListVideoActivity;
+import com.example.videotoimages.activity.ListVideoActivity;
 import com.example.videotoimages.R;
 import com.example.videotoimages.model.VideoFolder;
 
@@ -36,15 +36,15 @@ public class VideoFolderAdapter extends RecyclerView.Adapter<VideoFolderAdapter.
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, final int position) {
         holder.folderName.setText(arrayList.get(position).getFolderName());
-        holder.folderSize.setText(arrayList.get(position).getFolderSize()+"");
+        holder.folderSize.setText(arrayList.get(position).getFolderSize() + " videos");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context context=v.getContext();
-                Intent intent=new Intent(context, ListVideoActivity.class);
-                Bundle bundle=new Bundle();
-                bundle.putString("folderName",arrayList.get(position).getFolderName());
-                intent.putExtra("bundle",bundle);
+                Context context = v.getContext();
+                Intent intent = new Intent(context, ListVideoActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("folderName", arrayList.get(position).getFolderName());
+                intent.putExtra("bundle", bundle);
                 context.startActivity(intent);
             }
         });

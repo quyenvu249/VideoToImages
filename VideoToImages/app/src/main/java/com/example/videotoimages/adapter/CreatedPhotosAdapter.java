@@ -7,10 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-import com.example.videotoimages.PhotoDetailActivity;
 import com.example.videotoimages.R;
+import com.example.videotoimages.activity.PhotoDetailActivity;
 import com.example.videotoimages.model.CreatedPhotos;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ public class CreatedPhotosAdapter extends BaseAdapter {
     Context context;
     ArrayList<CreatedPhotos> arrayList;
     LayoutInflater inflater;
+    ArrayList<CreatedPhotos> arrToDelete;
 
     public CreatedPhotosAdapter(Context context, ArrayList<CreatedPhotos> arrayList) {
         this.context = context;
@@ -43,36 +46,37 @@ public class CreatedPhotosAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+        arrToDelete = new ArrayList<>();
         ViewHolder viewHolder;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_created_photos, null);
             viewHolder = new ViewHolder();
             viewHolder.img = convertView.findViewById(R.id.img);
+            viewHolder.cbState = convertView.findViewById(R.id.cbState);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         final CreatedPhotos createdPhotos = arrayList.get(position);
         viewHolder.img.setImageBitmap(createdPhotos.getBitmap());
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context context = v.getContext();
-                Intent intent = new Intent(context, PhotoDetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("bitmap", String.valueOf(createdPhotos.getBitmap()));
-                bundle.putString("path", arrayList.get(position).getPhotoPath());
-                bundle.putString("name", createdPhotos.getPhotoName());
-                bundle.putInt("size", createdPhotos.getPhotoSize());
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("bundlePhoto", bundle);
-                context.startActivity(intent);
-            }
-        });
+
+        if (createdPhotos.isChecked() == true) {
+            viewHolder.cbState.setChecked(true);
+            viewHolder.cbState.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.cbState.setChecked(false);
+            viewHolder.cbState.setVisibility(View.INVISIBLE);
+        }
         return convertView;
     }
 
     public class ViewHolder {
         ImageView img;
+        CheckBox cbState;
     }
+
+    public void removeCheck(int pos) {
+        CreatedPhotos createdPhotos = arrayList.get(pos);
+    }
+
 }
