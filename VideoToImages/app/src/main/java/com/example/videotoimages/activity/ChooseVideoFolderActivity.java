@@ -79,6 +79,7 @@ public class ChooseVideoFolderActivity extends AppCompatActivity {
         if (folderFound) {
             listFolder.add(new VideoFolder(file.getName(), n));
         }
+
     }
 
     public class LoadFolder extends AsyncTask<Void, Void, Void> {

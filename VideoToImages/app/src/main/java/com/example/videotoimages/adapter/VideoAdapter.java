@@ -40,9 +40,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.viewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull VideoAdapter.viewHolder holder, final int position) {
-        Glide.with(context).load("file://" + videoArrayList.get(position).getThumb())
-                .skipMemoryCache(false)
-                .into(holder.imgVideoPreView);
+//        Glide.with(context).load("file://" + videoArrayList.get(position).getBitmap())
+//                .skipMemoryCache(false)
+//                .into(holder.imgVideoPreView);
+        holder.imgVideoPreView.setImageBitmap(videoArrayList.get(position).getBitmap());
         holder.videoName.setText(videoArrayList.get(position).getName());
         holder.videoDur.setText(simpleTime.format(videoArrayList.get(position).getDuration()) + "");
         holder.itemView.setOnClickListener(new View.OnClickListener() {

@@ -53,8 +53,8 @@
 
                 <ImageView
                     android:id="@+id/action1"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:gravity="center_horizontal"
                     android:src="@drawable/ic_baseline_video_library_24" />
 
@@ -62,7 +62,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/action1" />
+                    android:text="@string/action1"
+                    android:textColor="@color/colorBlack" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -87,8 +88,8 @@
 
                 <ImageView
                     android:id="@+id/action2"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:gravity="center_horizontal"
                     android:src="@drawable/ic_baseline_image_24" />
 
@@ -96,7 +97,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/action2" />
+                    android:text="@string/action2"
+                    android:textColor="@color/colorBlack" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -121,8 +123,8 @@
 
                 <ImageView
                     android:id="@+id/action3"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_baseline_slideshow_24" />
 
@@ -130,7 +132,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/action3" />
+                    android:text="@string/action3"
+                    android:textColor="@color/colorBlack" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -155,8 +158,8 @@
 
                 <ImageView
                     android:id="@+id/action4"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:gravity="center_horizontal"
                     android:src="@drawable/ic_baseline_settings_24" />
 
@@ -164,18 +167,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/action4" />
+                    android:text="@string/action4"
+                    android:textColor="@color/colorBlack" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </GridLayout>
 
     <LinearLayout
-        android:padding="@dimen/margin_20dp"
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="3"
         android:gravity="center"
+        android:padding="@dimen/margin_20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 

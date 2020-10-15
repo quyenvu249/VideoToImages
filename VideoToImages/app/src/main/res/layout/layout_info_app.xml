@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="About Us"
-        android:textColor="#000000"
+        android:textColor="@color/colorBlack"
         android:textSize="24dp" />
 
     <ImageView
@@ -19,55 +19,55 @@
         android:src="@drawable/ic_baseline_video_library_24" />
 
     <TextView
-        android:textColor="#000000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Name" />
+        android:text="Name"
+        android:textColor="@color/colorBlack" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Video To Images"
-        android:textColor="#00e5ff"
+        android:textColor="@color/colorAccent"
         android:textSize="20dp" />
 
     <TextView
-        android:textColor="#000000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Author" />
+        android:text="Author"
+        android:textColor="@color/colorBlack" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="HDP Solutions"
-        android:textColor="#00e5ff"
+        android:textColor="@color/colorAccent"
         android:textSize="20dp" />
 
     <TextView
-        android:textColor="#000000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Privacy Policy" />
+        android:text="Privacy Policy"
+        android:textColor="@color/colorBlack" />
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="http://hdpsolution.com/privacy_policy/CameraApps/PrivacyPolicyCameraApps.htm"
-        android:textColor="#00e5ff"
+        android:textColor="@color/colorAccent"
         android:textSize="20dp" />
 
     <TextView
-        android:textColor="#000000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email" />
+        android:text="Email"
+        android:textColor="@color/colorBlack" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="support@hdpsolutions.com"
-        android:textColor="#00e5ff"
+        android:textColor="@color/colorAccent"
         android:textSize="20dp" />
 </LinearLayout>

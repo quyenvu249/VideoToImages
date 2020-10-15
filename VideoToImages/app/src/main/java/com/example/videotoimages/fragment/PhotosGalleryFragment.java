@@ -153,9 +153,7 @@ public class PhotosGalleryFragment extends Fragment {
                                 arrayList.remove(arrSeclected.get(i));
                                 File fileToDelete = new File(arrSeclected.get(i).getPhotoPath());
                                 if (fileToDelete.exists()) {
-                                    if (fileToDelete.delete()) {
-                                        Toast.makeText(getContext(), "Delete Successfully", Toast.LENGTH_SHORT).show();
-                                    } else {
+                                    if (!fileToDelete.delete()) {
                                         Toast.makeText(getContext(), "Fail to delete", Toast.LENGTH_SHORT).show();
                                     }
                                 }

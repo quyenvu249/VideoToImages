@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +21,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckedTextView;
@@ -50,12 +52,12 @@ public class PlayVideoActivity extends AppCompatActivity {
     RecyclerView rcPreview;
     CheckedTextView ctvQuickCapture, ctvTimeCapture;
     VideoView videoPlaying;
-    TextView tvTimePlaying, tvTotalTime, tvName, tvTimeToSnap;
+    TextView tvTimePlaying, tvTotalTime, tvTimeToSnap;
     SeekBar seekBar;
     SimpleDateFormat simpleTime = new SimpleDateFormat("mm:ss");
-    ImageView btnPlay, icCamera, btnPause;
+    ImageView btnPlay, icCamera, btnPause, icDone;
     RadioButton rbSnap;
-    Button btnDone, btnStop;
+    Button btnStop;
     FileOutputStream fileOutputStream;
     MediaMetadataRetriever mediaMetadataRetriever;
     String path;
@@ -66,8 +68,12 @@ public class PlayVideoActivity extends AppCompatActivity {
     String SHARED_PREFERENCES_NAME = "Settings";
     String file_format, quality, size;
     ArrayList<CreatedPhotos> arrayList;
+    ArrayList<CreatedPhotos> arr1;
     Bitmap bmFrame;
     int currentPosition;
+    CreatedPhotos createdPhotos;
+    int position;
+    Bitmap[] bitmaps;
 
     @Override
 
@@ -104,7 +110,6 @@ public class PlayVideoActivity extends AppCompatActivity {
         prepareVideo();
         UpdateTimeVideo();
 
-        tvName.setText(b.getString("videoName"));
         tvTotalTime.setText(simpleTime.format(b.getInt("videoDur")) + "");
 
         seekBar.setMax(b.getInt("videoDur"));
@@ -151,8 +156,10 @@ public class PlayVideoActivity extends AppCompatActivity {
         });
 
         arrayList = new ArrayList<>();
+        arr1 = new ArrayList<>();
         ctvQuickCapture.setChecked(true);
-        ctvQuickCapture.setTextColor(Color.BLUE);
+
+        ctvQuickCapture.setTextColor(Color.RED);
         if (ctvQuickCapture.isChecked()) {
             icCamera.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -161,20 +168,20 @@ public class PlayVideoActivity extends AppCompatActivity {
                     quickCapture();
                 }
             });
-            btnDone.setOnClickListener(new View.OnClickListener() {
+            icDone.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Toast.makeText(v.getContext(), "Done", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(PlayVideoActivity.this, GalleryActivity.class));
                 }
             });
-
         }
 
         ctvTimeCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ctvTimeCapture.setChecked(true);
-                ctvTimeCapture.setTextColor(Color.BLUE);
+                ctvTimeCapture.setTextColor(Color.RED);
                 ctvQuickCapture.setChecked(false);
                 ctvQuickCapture.setTextColor(Color.BLACK);
                 tvTimeToSnap.setVisibility(View.VISIBLE);
@@ -208,33 +215,37 @@ public class PlayVideoActivity extends AppCompatActivity {
                         alertDialog.show();
                     }
                 });
-                icCamera.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        capture();
-                    }
-                });
-                btnDone.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(v.getContext(), "Done", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(PlayVideoActivity.this, GalleryActivity.class));
-
-                    }
-                });
+                if (ctvTimeCapture.isChecked()) {
+                    icCamera.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //capture();
+                            new TimeCapture().execute();
+                        }
+                    });
+                    icDone.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(v.getContext(), "Done", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(PlayVideoActivity.this, GalleryActivity.class));
+                        }
+                    });
+                }
             }
         });
+
         ctvQuickCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ctvQuickCapture.setChecked(true);
-                ctvQuickCapture.setTextColor(Color.BLUE);
+                ctvQuickCapture.setTextColor(Color.RED);
                 ctvTimeCapture.setChecked(false);
                 ctvTimeCapture.setTextColor(Color.BLACK);
                 tvTimeToSnap.setVisibility(View.INVISIBLE);
                 rbSnap.setVisibility(View.INVISIBLE);
             }
         });
+
     }
 
     private void AnhXa() {
@@ -246,13 +257,14 @@ public class PlayVideoActivity extends AppCompatActivity {
         tvTotalTime = findViewById(R.id.tvTotalTime);
         videoPlaying = findViewById(R.id.videoPlaying);
         tvTimePlaying = findViewById(R.id.tvTimePlay);
-        tvName = findViewById(R.id.tvName);
+//        tvName = findViewById(R.id.tvName);
         seekBar = findViewById(R.id.seekbar);
         btnPlay = findViewById(R.id.btnPlay);
         btnPause = findViewById(R.id.btnPause);
         rbSnap = findViewById(R.id.rbSnap);
         icCamera = findViewById(R.id.icCamera);
-        btnDone = findViewById(R.id.btnDone);
+        //btnDone = findViewById(R.id.btnDone);
+        icDone = findViewById(R.id.icDone);
         btnStop = findViewById(R.id.btnStop);
         rcPreview = findViewById(R.id.rcPreview);
     }
@@ -362,7 +374,7 @@ public class PlayVideoActivity extends AppCompatActivity {
                     }
                 }
             }
-        }, 200);
+        }, 50);
     }
 
     private void capture() {
@@ -370,9 +382,11 @@ public class PlayVideoActivity extends AppCompatActivity {
             @Override
             public void run() {
                 currentPosition = Integer.parseInt(tvTimeToSnap.getText().toString()) * 1000;
+                int count = videoPlaying.getDuration() / Integer.parseInt(tvTimeToSnap.getText().toString()) * 1000;
+                int progress = 0;
+                Bitmap[] bitmaps;
                 while (currentPosition < videoPlaying.getDuration()) {
-                    currentPosition = currentPosition + Integer.parseInt(tvTimeToSnap.getText().toString()) * 1000;
-                    int position = currentPosition * 1000;
+                    position = currentPosition * 1000;
                     bmFrame = mediaMetadataRetriever.getFrameAtTime(position);
                     if (bmFrame != null) {
                         try {
@@ -435,7 +449,7 @@ public class PlayVideoActivity extends AppCompatActivity {
                             }
                             fileOutputStream.flush();
                             fileOutputStream.close();
-                            CreatedPhotos createdPhotos = new CreatedPhotos(bmFrame, fileOutputStream + "", file.getAbsolutePath(), Integer.parseInt(file.length() + ""), false);
+                            createdPhotos = new CreatedPhotos(bmFrame, fileOutputStream + "", file.getAbsolutePath(), Integer.parseInt(file.length() + ""), false);
                             arrayList.add(createdPhotos);
                             adapter = new PhotosPreviewAdapter(PlayVideoActivity.this, arrayList);
                             rcPreview.setLayoutManager(new LinearLayoutManager(PlayVideoActivity.this, LinearLayoutManager.HORIZONTAL, false));
@@ -444,9 +458,114 @@ public class PlayVideoActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
+                    currentPosition = currentPosition + Integer.parseInt(tvTimeToSnap.getText().toString()) * 1000;
                 }
             }
         }, 100);
 
     }
+
+    public class TimeCapture extends AsyncTask<Integer, Void, Void> {
+        boolean resume = true;
+        boolean pause = false;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            currentPosition = Integer.parseInt(tvTimeToSnap.getText().toString()) * 1000;
+        }
+
+        @SuppressLint("WrongThread")
+        @Override
+        protected Void doInBackground(Integer... ints) {
+            while (currentPosition < videoPlaying.getDuration()) {
+                int position = currentPosition * 1000;
+                Bitmap bitmap = mediaMetadataRetriever.getFrameAtTime(position);
+                if (bitmap != null) {
+                    try {
+                        File file = new File(SCREENSHOTS_LOCATIONS);
+                        if (!file.exists()) {
+                            file.mkdirs();
+                        }
+                        if (file_format.equals("JPG")) {
+                            fileOutputStream = new FileOutputStream(SCREENSHOTS_LOCATIONS + "photo" + System.currentTimeMillis() + ".jpg");
+                            if (fileOutputStream != null) {
+                                switch (quality.trim()) {
+                                    case "Best":
+                                        if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)) {
+                                            Toast.makeText(PlayVideoActivity.this, "Lỗi", Toast.LENGTH_SHORT).show();
+                                        }
+                                    case "Very High":
+                                        if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fileOutputStream)) {
+                                            Toast.makeText(PlayVideoActivity.this, "Lỗi", Toast.LENGTH_SHORT).show();
+                                        }
+                                    case "High":
+                                        if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 60, fileOutputStream)) {
+                                            Toast.makeText(PlayVideoActivity.this, "Lỗi", Toast.LENGTH_SHORT).show();
+                                        }
+                                    case "Medium":
+                                        if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 40, fileOutputStream)) {
+                                            Toast.makeText(PlayVideoActivity.this, "Lỗi", Toast.LENGTH_SHORT).show();
+                                        }
+                                    case "Low":
+                                        if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 20, fileOutputStream)) {
+                                            Toast.makeText(PlayVideoActivity.this, "Lỗi", Toast.LENGTH_SHORT).show();
+                                        }
+                                }
+                            }
+                        } else {
+                            fileOutputStream = new FileOutputStream(SCREENSHOTS_LOCATIONS + "photo" + System.currentTimeMillis() + ".png");
+                            if (fileOutputStream != null) {
+                                switch (quality.trim()) {
+                                    case "Best":
+                                        if (!bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)) {
+                                            Toast.makeText(PlayVideoActivity.this, "Lỗi", Toast.LENGTH_SHORT).show();
+                                        }
+                                    case "Very High":
+                                        if (!bitmap.compress(Bitmap.CompressFormat.PNG, 80, fileOutputStream)) {
+                                            Toast.makeText(PlayVideoActivity.this, "Lỗi", Toast.LENGTH_SHORT).show();
+                                        }
+                                    case "High":
+                                        if (!bitmap.compress(Bitmap.CompressFormat.PNG, 60, fileOutputStream)) {
+                                            Toast.makeText(PlayVideoActivity.this, "Lỗi", Toast.LENGTH_SHORT).show();
+                                        }
+                                    case "Medium":
+                                        if (!bitmap.compress(Bitmap.CompressFormat.PNG, 40, fileOutputStream)) {
+                                            Toast.makeText(PlayVideoActivity.this, "Lỗi", Toast.LENGTH_SHORT).show();
+                                        }
+                                    case "Low":
+                                        if (!bitmap.compress(Bitmap.CompressFormat.PNG, 20, fileOutputStream)) {
+                                            Toast.makeText(PlayVideoActivity.this, "Lỗi", Toast.LENGTH_SHORT).show();
+                                        }
+                                }
+                            }
+                        }
+                        fileOutputStream.flush();
+                        fileOutputStream.close();
+                        createdPhotos = new CreatedPhotos(bitmap, fileOutputStream + "", file.getAbsolutePath(), Integer.parseInt(file.length() + ""), false);
+                        arrayList.add(createdPhotos);
+                        adapter = new PhotosPreviewAdapter(PlayVideoActivity.this, arrayList);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                currentPosition = currentPosition + Integer.parseInt(tvTimeToSnap.getText().toString()) * 1000;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+            rcPreview.setLayoutManager(new LinearLayoutManager(PlayVideoActivity.this, LinearLayoutManager.HORIZONTAL, false));
+            rcPreview.setAdapter(adapter);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+        }
+    }
+
 }

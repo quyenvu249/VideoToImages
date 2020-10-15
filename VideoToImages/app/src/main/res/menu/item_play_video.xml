@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/icCamera"
+        android:icon="@drawable/ic_baseline_camera_alt_24"
+        android:title="Capture" />
+    <item
+        android:id="@+id/icOK"
+        android:icon="@drawable/ic_baseline_done_outline_24"
+        android:title="Done" />
+</menu>

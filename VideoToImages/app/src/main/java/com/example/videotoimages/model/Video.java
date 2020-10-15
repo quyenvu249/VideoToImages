@@ -1,19 +1,20 @@
 package com.example.videotoimages.model;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 public class Video {
     String name;
     String path;
-    String thumb;
+    Bitmap bitmap;
     int duration;
     int size;
 
-    public Video( String name,String path, String thumb, int duration, int size) {
+    public Video( String name,String path, Bitmap bitmap, int duration, int size) {
         //this.uriVid = uriVid;
         this.name = name;
         this.path = path;
-        this.thumb = thumb;
+        this.bitmap = bitmap;
         this.duration = duration;
         this.size = size;
     }
@@ -29,13 +30,21 @@ public class Video {
     public Video() {
     }
 
-    public String getThumb() {
-        return thumb;
+    public Bitmap getBitmap() {
+        return bitmap;
     }
 
-    public void setThumb(String thumb) {
-        this.thumb = thumb;
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
+
+    //    public String getThumb() {
+//        return thumb;
+//    }
+//
+//    public void setThumb(String thumb) {
+//        this.thumb = thumb;
+//    }
 
 //    public Uri getUriVid() {
 //        return uriVid;
