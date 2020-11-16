@@ -1,8 +1,10 @@
 package com.example.videotoimages.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -22,10 +24,12 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,8 +42,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.videotoimages.FileUtils;
 import com.example.videotoimages.R;
 import com.example.videotoimages.adapter.EmojiAdapter;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -49,10 +57,11 @@ import java.util.ArrayList;
 
 public class PhotoDetailActivity extends AppCompatActivity {
     PhotoEditorView imageView;
-    ImageView icInfo, icDelete, icShare, icEdit, icColor, icEraser, icPickColor, icSave;
-    ImageView icCrop, icText, icSticker, icPaint;
+    ImageView icInfo, icDelete, icShare, icEdit, icColor, icEraser, icPickColor, icBrush, icPre;
+    ImageView icCrop, icText, icSticker, icPaint, icBack, icUndo, icSave, icRedo;
     SeekBar sbBrushSize, sbBrushOpacity;
     String path;
+    ConstraintLayout layoutDo;
     LinearLayout layoutFunction, layoutToEdit, layoutToPaint, layoutText;
     RelativeLayout rlImage;
     FragmentManager fragmentManager;
@@ -62,8 +71,9 @@ public class PhotoDetailActivity extends AppCompatActivity {
     final int PIC_CROP = 1;
     ArrayList emoji;
     private final int PHOTO_EDITOR_REQUEST_CODE = 231;
-
+    public static final int ACTION_REQUEST_EDITIMAGE = 9;
     String bitmap;
+    Uri imgUri;
 
 
     @Override
@@ -93,6 +103,12 @@ public class PhotoDetailActivity extends AppCompatActivity {
         icText = findViewById(R.id.icText);
         sbBrushOpacity = findViewById(R.id.sbBrushOpacity);
         sbBrushSize = findViewById(R.id.sbBrushSize);
+        icBack = findViewById(R.id.icBack);
+        layoutDo = findViewById(R.id.layoutDo);
+        icUndo = findViewById(R.id.icUndo);
+        icRedo = findViewById(R.id.icRedo);
+        icBrush = findViewById(R.id.icBrush);
+        icPre = findViewById(R.id.icPre);
 
         fragmentManager = getSupportFragmentManager();
 
@@ -113,6 +129,7 @@ public class PhotoDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final Bundle b = intent.getBundleExtra("bundlePhoto");
         path = b.getString("path");
+        imgUri=Uri.parse(path);
         imageView.getSource().setImageBitmap(BitmapFactory.decodeFile(path));
 
         // Typeface mTextRobotoTf = ResourcesCompat.getFont(this, R.font.roboto_medium);
@@ -149,28 +166,22 @@ public class PhotoDetailActivity extends AppCompatActivity {
         icShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "Test");
-                sendIntent.setType("text/plain");
-                Intent shareIntent = Intent.createChooser(sendIntent, null);
-                startActivity(shareIntent);
-
-//                Bitmap icon = BitmapFactory.decodeFile(path) ;
-//                Intent share = new Intent(Intent.ACTION_SEND);
-//                share.setType("image/jpeg");
-//                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//                icon.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//                File f = new File(Environment.getExternalStorageDirectory() + path);
-//                try {
-//                    f.createNewFile();
-//                    FileOutputStream fo = new FileOutputStream(f);
-//                    fo.write(bytes.toByteArray());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                share.putExtra(Intent.EXTRA_STREAM, Uri.parse(path));
-//                startActivity(Intent.createChooser(share, "Share Image"));
+                Bitmap icon = BitmapFactory.decodeFile(path);
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.setType("image/png");
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                icon.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                File f = new File(path);
+                try {
+                    f.createNewFile();
+                    FileOutputStream fo = new FileOutputStream(f);
+                    fo.write(bytes.toByteArray());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.d("ABC",e.getMessage());
+                }
+                share.putExtra(Intent.EXTRA_STREAM, Uri.parse(path));
+                startActivity(Intent.createChooser(share, "Share Image"));
             }
         });
         icEdit.setOnClickListener(new View.OnClickListener() {
@@ -183,6 +194,7 @@ public class PhotoDetailActivity extends AppCompatActivity {
                 icPaint.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        layoutDo.setVisibility(View.VISIBLE);
                         layoutToEdit.setVisibility(View.INVISIBLE);
                         layoutToPaint.setVisibility(View.VISIBLE);
                         mPhotoEditor.setBrushDrawingMode(true);
@@ -247,17 +259,50 @@ public class PhotoDetailActivity extends AppCompatActivity {
                                 mPhotoEditor.brushEraser();
                             }
                         });
+                        icBrush.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mPhotoEditor.setBrushDrawingMode(true);
+                                mPhotoEditor.setBrushSize(10);
+                            }
+                        });
+                        icUndo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mPhotoEditor.undo();
+                            }
+                        });
+                        icRedo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mPhotoEditor.redo();
+                            }
+                        });
                     }
                 });
                 icSticker.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        layoutDo.setVisibility(View.VISIBLE);
                         addSticker();
+                        icUndo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mPhotoEditor.undo();
+                            }
+                        });
+                        icRedo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mPhotoEditor.redo();
+                            }
+                        });
                     }
                 });
                 icText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        layoutDo.setVisibility(View.VISIBLE);
                         layoutText.setVisibility(View.VISIBLE);
                         layoutToEdit.setVisibility(View.INVISIBLE);
                         icPickColor.setOnClickListener(new View.OnClickListener() {
@@ -276,6 +321,18 @@ public class PhotoDetailActivity extends AppCompatActivity {
 
                                 });
                                 dialog.show();
+                            }
+                        });
+                        icUndo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mPhotoEditor.undo();
+                            }
+                        });
+                        icRedo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mPhotoEditor.redo();
                             }
                         });
                     }
@@ -315,6 +372,24 @@ public class PhotoDetailActivity extends AppCompatActivity {
                         } catch (Exception e) {
                             Log.e("Demo App", e.getMessage());
                         }
+
+                    }
+                });
+                icBack.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        layoutFunction.setVisibility(View.VISIBLE);
+                        layoutToEdit.setVisibility(View.INVISIBLE);
+                        icSave.setVisibility(View.INVISIBLE);
+                    }
+                });
+                icPre.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        layoutText.setVisibility(View.INVISIBLE);
+                        layoutToPaint.setVisibility(View.INVISIBLE);
+                        layoutToEdit.setVisibility(View.VISIBLE);
+                        icSave.setVisibility(View.VISIBLE);
                     }
                 });
             }
@@ -359,6 +434,12 @@ public class PhotoDetailActivity extends AppCompatActivity {
         rcEmoji.setLayoutManager(gridLayoutManager);
         EmojiAdapter emojiAdapter = new EmojiAdapter(PhotoDetailActivity.this, emoji);
         rcEmoji.setAdapter(emojiAdapter);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
         emojiAdapter.setOnItemClickListener(new EmojiAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int pos, View v) {
@@ -368,6 +449,5 @@ public class PhotoDetailActivity extends AppCompatActivity {
         builder.setView(view);
         builder.show();
     }
-
 
 }

@@ -6,6 +6,7 @@ import androidx.cardview.widget.CardView;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +78,16 @@ public class MainActivity extends AppCompatActivity {
                 alertDialog.setView(infoDialog);
                 alertDialog.create();
                 alertDialog.show();
+            }
+        });
+        icRate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.asquaremobileapps.videotoimageconverter")));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + "com.asquaremobileapps.videotoimageconverter")));
+                }
             }
         });
     }

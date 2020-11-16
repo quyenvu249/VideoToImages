@@ -17,6 +17,7 @@ import com.example.videotoimages.activity.PlayVideoActivity;
 import com.example.videotoimages.R;
 import com.example.videotoimages.model.Video;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -24,7 +25,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.viewHolder> 
     Context context;
     ArrayList<Video> videoArrayList;
     public OnItemClickListener onItemClickListener;
-    SimpleDateFormat simpleTime = new SimpleDateFormat("mm:ss");
+    DateFormat simpleTime = new SimpleDateFormat("mm:ss");
 
     public VideoAdapter(Context context, ArrayList<Video> videoArrayList) {
         this.context = context;

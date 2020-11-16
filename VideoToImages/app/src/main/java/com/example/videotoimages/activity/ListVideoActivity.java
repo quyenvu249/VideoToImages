@@ -116,42 +116,6 @@ public class ListVideoActivity extends AppCompatActivity {
         });
     }
 
-    //    public void getVideos() {
-//        ContentResolver contentResolver = getContentResolver();
-//        Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-//        String selection = MediaStore.Video.Media.DATA + " like?";
-//        String[] selectionArgs = new String[]{"%" + folderName + "%"};
-//
-//        Cursor cursor = contentResolver.query(uri, null, selection, selectionArgs, null);
-//
-//        if (cursor != null && cursor.moveToFirst()) {
-//            do {
-//                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.TITLE));
-//                int duration = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
-//                String data = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
-//                String thumb = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Thumbnails.DATA));
-//                Video videoModel = new Video();
-//                videoModel.setName(title);
-//                videoModel.setPath(data);
-//                videoModel.setThumb(thumb);
-//                videoModel.setDuration(duration);
-//                videoArrayList.add(videoModel);
-//            } while (cursor.moveToNext());
-//        }
-//
-//        VideoAdapter adapter = new VideoAdapter(this, videoArrayList);
-//        recyclerView.setAdapter(adapter);
-//
-//        adapter.setOnItemClickListener(new VideoAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(int pos, View v) {
-//                Intent intent = new Intent(getApplicationContext(), PlayVideoActivity.class);
-//                intent.putExtra("pos", pos);
-//                startActivity(intent);
-//            }
-//        });
-//
-//    }
     public static Bitmap getBitmapFromVideo(String videoPath) throws Throwable {
         Bitmap bitmap = null;
         MediaMetadataRetriever mediaMetadataRetriever = null;

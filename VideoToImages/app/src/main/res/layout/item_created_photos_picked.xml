@@ -17,5 +17,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/img"
-        android:button="@drawable/custom_checkbox" />
+        android:button="@drawable/ic_baseline_check_box_24" />
 </RelativeLayout>

@@ -40,7 +40,7 @@ public class PhotosGalleryFragment extends Fragment {
     ArrayList<CreatedPhotos> arrayList;
     GridView grPhotos;
     int count = 0;
-    ArrayList<CreatedPhotos> arrSeclected;
+    ArrayList<CreatedPhotos> arrSelected;
     CreatedPhotosAdapter createdPhotosAdapter;
     TextView textView;
 
@@ -65,7 +65,7 @@ public class PhotosGalleryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_photos_gallery, container, false);
         grPhotos = (GridView) view.findViewById(R.id.grPhotos);
         arrayList = new ArrayList<>();
-        arrSeclected = new ArrayList<>();
+        arrSelected = new ArrayList<>();
         getAllPhotos();
         grPhotos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -110,14 +110,17 @@ public class PhotosGalleryFragment extends Fragment {
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
                 if (checked) {
-                    count++;
                     arrayList.get(position).setChecked(true);
-                    arrSeclected.add(arrayList.get(position));
+                    arrSelected.add(arrayList.get(position));
+                    createdPhotosAdapter.notifyDataSetChanged();
+                } else {
+                    arrayList.get(position).setChecked(false);
+                    arrSelected.remove(arrayList.get(position));
                     createdPhotosAdapter.notifyDataSetChanged();
                 }
 
-                mode.setTitle(count + " items selected");
-                Toast.makeText(getContext(), arrSeclected.size() + "", Toast.LENGTH_SHORT).show();
+                mode.setTitle(arrSelected.size() + " items selected");
+//                Toast.makeText(getContext(), arrSelected.size() + "", Toast.LENGTH_SHORT).show();
             }
 
 
@@ -137,21 +140,21 @@ public class PhotosGalleryFragment extends Fragment {
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 if (item.getItemId() == R.id.icReload) {
                     count = 0;
-                    for (int i = 0; i < arrSeclected.size(); i++) {
-                        arrSeclected.get(i).setChecked(false);
+                    for (int i = 0; i < arrSelected.size(); i++) {
+                        arrSelected.get(i).setChecked(false);
                     }
-                    arrSeclected.clear();
+                    arrSelected.clear();
                     createdPhotosAdapter.notifyDataSetChanged();
                     mode.finish();
                 } else if (item.getItemId() == R.id.icDeleteMultiple) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Delete " + arrSeclected.size() + " items");
+                    builder.setTitle("Delete " + arrSelected.size() + " items");
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            for (int i = 0; i < arrSeclected.size(); i++) {
-                                arrayList.remove(arrSeclected.get(i));
-                                File fileToDelete = new File(arrSeclected.get(i).getPhotoPath());
+                            for (int i = 0; i < arrSelected.size(); i++) {
+                                arrayList.remove(arrSelected.get(i));
+                                File fileToDelete = new File(arrSelected.get(i).getPhotoPath());
                                 if (fileToDelete.exists()) {
                                     if (!fileToDelete.delete()) {
                                         Toast.makeText(getContext(), "Fail to delete", Toast.LENGTH_SHORT).show();
@@ -171,7 +174,7 @@ public class PhotosGalleryFragment extends Fragment {
                     builder.show();
                     return false;
                 } else if (item.getItemId() == R.id.icShare) {
-                    for (int i = 0; i < arrSeclected.size(); i++) {
+                    for (int i = 0; i < arrSelected.size(); i++) {
 
                     }
                 }
@@ -181,7 +184,7 @@ public class PhotosGalleryFragment extends Fragment {
             @Override
             public void onDestroyActionMode(ActionMode mode) {
                 count = 0;
-                arrSeclected.clear();
+                arrSelected.clear();
                 mode.finish();
             }
         });

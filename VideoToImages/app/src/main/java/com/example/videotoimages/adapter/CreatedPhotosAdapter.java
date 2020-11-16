@@ -47,7 +47,7 @@ public class CreatedPhotosAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         arrToDelete = new ArrayList<>();
-        ViewHolder viewHolder;
+        final ViewHolder viewHolder;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_created_photos, null);
             viewHolder = new ViewHolder();
@@ -63,6 +63,13 @@ public class CreatedPhotosAdapter extends BaseAdapter {
         if (createdPhotos.isChecked() == true) {
             viewHolder.cbState.setChecked(true);
             viewHolder.cbState.setVisibility(View.VISIBLE);
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    createdPhotos.setChecked(false);
+                    notifyDataSetChanged();
+                }
+            });
         } else {
             viewHolder.cbState.setChecked(false);
             viewHolder.cbState.setVisibility(View.INVISIBLE);
@@ -77,6 +84,8 @@ public class CreatedPhotosAdapter extends BaseAdapter {
 
     public void removeCheck(int pos) {
         CreatedPhotos createdPhotos = arrayList.get(pos);
+        createdPhotos.setChecked(false);
+        arrToDelete.add(createdPhotos);
     }
 
 }
